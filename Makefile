@@ -1,8 +1,13 @@
+# Get the OS
 OS=$(shell uname)
 
+# Tools
 CC=avr-gcc
 OBJDUMP=avr-objdump
 AVRDUDE=avrdude
+
+# Flags
+CFLAGS=-mmcu=atmega328p
 
 TTY=minicom
 TTY_PORT=/dev/ttyACM0
@@ -30,4 +35,4 @@ download:
 	$(OBJDUMP) -m avr -D $(DOWNLOAD_HEX) > download.asm
 
 %.o: %.c
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c -o $@ $<

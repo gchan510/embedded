@@ -1,3 +1,4 @@
-*.o
-download.asm
-download.hex
+*
+!*.c
+!*.S
+!Makefile
