@@ -18,7 +18,11 @@ HEX=program.hex
 DOWNLOAD_HEX=download.hex
 
 ifeq ($(OS), "Linux")
+	PORT = /dev/ttyACM0
+	TTY_PORT=/dev/ACM0
 else
+	PORT = /dev/ttys000
+	TTY_PORT=/dev/ptmx
 endif
 
 os:
@@ -30,8 +34,14 @@ program:
 tty:
 	$(TTY) $(TTY_OPT)
 
+# Using USBasp
+download_usbasp:
+	$(AVRDUDE) -p atmega328p -c usbasp -P $(PORT) -U flash:r:$(DOWNLOAD_HEX):i
+	$(OBJDUMP) -m avr -D $(DOWNLOAD_HEX) > download.asm
+
+# Using the Arduino
 download:
-	$(AVRDUDE) -p atmega328p -c arduino -P /dev/ttyACM0 -U flash:r:$(DOWNLOAD_HEX):i
+	$(AVRDUDE) -p atmega328p -c arduino -P $(PORT) -U flash:r:$(DOWNLOAD_HEX):i
 	$(OBJDUMP) -m avr -D $(DOWNLOAD_HEX) > download.asm
 
 %.o: %.c
